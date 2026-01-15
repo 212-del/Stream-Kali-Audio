@@ -1,7 +1,7 @@
 #/bin/bash
 echo "Are Your Phone and PC Are connected to same Wi-Fi[y/n]: "
 read -r choice
-if [ "$choice" = "y" ]; then
+if [ "$choice" == "y" ]; then
  sudo apt install pipewire ffmpeg pipewire-audio-client-libraries wireplumber  pulseaudio-utils iproute2 net-tools gstreamer1.0-tools \
                  gstreamer1.0-plugins-good \
                  gstreamer1.0-plugins-base
@@ -34,6 +34,8 @@ echo -e "\nDownload the audio.sdp from the link below\nSave This file at memorab
 echo "http://${PC-IP:8000/audio.sdp}"
 read -r -p "Have you downloaded the file audio.sdp.[y/n]" download
 
+until false
+do
 if [[ "${download}" == "y" ]]; then
  ffmpeg -f pulse \
  -i ${source} \
@@ -44,3 +46,4 @@ if [[ "${download}" == "y" ]]; then
 else
  echo "Kindly download the file audio.sdp to stream audio"
 fi
+done

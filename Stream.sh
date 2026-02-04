@@ -39,8 +39,9 @@ do
 if [[ "${download}" == "y" ]]; then
  ffmpeg -f pulse \
  -i ${source} \
- -acodec libopus -ac 2 -ar 48000 \
+ -acodec libopus -ac 2 -ar 44100 \
  -f rtp -payload_type 96 \
+ -flags low_delay \
  rtp://PHONE-IP:5004 </dev/null
  echo "To play the audio open the audio.sdp file via the vlc's browse option in the centre of bottom menu"
 else

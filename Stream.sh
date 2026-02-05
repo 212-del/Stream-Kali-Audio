@@ -47,6 +47,11 @@ if [[ "${download}" == "y" ]]; then
  ffmpeg -f pulse \
  -i ${source} \
  -acodec libopus -ac 2 -ar 48000 \
+ -application lowdelay \
+ -frame_duration 2.5 \
+ -b:a 200k \
+ -flush_packets 1 \
+ -max_delay 0 \
  -f rtp -payload_type 96 \
  -flags low_delay \
  rtp://${Phone_IP}:5004 </dev/null

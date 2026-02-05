@@ -13,4 +13,5 @@ Lightweight Bash utility that captures Kali Linux system audio and streams it li
 git clone https://github.com/212-del/Stream-Kali-Audio.git && chmod +x Stream.sh && bash Stream.sh
 
 # Future Upgrades
-Try to Lower the Latency.
+Try to Lower the Latency. > Done on 5 Feb, 2026. 3:36:01PM
+Try to do validations checks of user input data.

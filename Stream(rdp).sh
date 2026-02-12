@@ -47,6 +47,7 @@ if [[ "${download}" == "y" ]]; then
  ffmpeg -f pulse \
  -i ${source} \
  -acodec libopus -ac 2 -ar 48000 \
+ -tune zerolatency -fflags nobuffer \
  -application lowdelay \
  -frame_duration 2.5 \
  -b:a 200k \

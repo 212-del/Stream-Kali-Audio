@@ -8,7 +8,7 @@ if [ "$choice" == "y" ]; then
                  gstreamer1.0-plugins-good \
                  gstreamer1.0-plugins-base
 else
- echo "Please Connect Both Devices to the same Wi-Fi"                 
+ echo "Please Connect Both Devices to the same Wi-Fi" 
 fi
 read -r -p "Enter the IP of Phone: " Phone_IP
 read -r -p "Enter the IP of PC: " PC_IP
@@ -22,12 +22,13 @@ sleep 1
 echo "Creating a file audio.sdp on Desktop.(You can see too)"
 cat <<EOL > /home/$(whoami)/Desktop/audio.sdp
 v=0
-o=- 0 0 IN IP4 ${Phone_IP}
-s=FFmpeg Opus RTP
+o=- 0 0 IN IP4 ${PC_IP}
+s=FFmpeg PCM RTP
 c=IN IP4 ${Phone_IP}
 t=0 0
-m=audio 500 RTP/AVP 96
-a=rtpmap:96 opus/48000/2
+a=tool:libavformat 62.3.100
+m=audio 5004 RTP/AVP 10
+b=AS:1536
 EOL
 echo "Kindly allow server port 8000 to serve the file audio.sdp to phone."
 sudo ufw allow 8000
@@ -38,22 +39,20 @@ echo "Kindly press CTRL+C after downloading the file."
 python3  -m http.server 8000 --directory /home/$(whoami)/Desktop
 
 read -r -p "Have you downloaded the file audio.sdp.[y/n]: " download
-until false
 until [[ "${download}" == "y"  ]]; do
 read -r -p "Have you downloaded the file audio.sdp.[y/n]: " download
 done
 
 if [[ "${download}" == "y" ]]; then
- ffmpeg -f pulse \
- -i ${source} \
- -acodec libopus -ac 2 -ar 48000 \
- -application lowdelay \
- -frame_duration 2.5 \
- -b:a 200k \
+ ffmpeg -f alsa \
+ -i hw:0 \
+ -ac 2 -ar 48000 \
  -flush_packets 1 \
  -max_delay 0 \
- -f rtp -payload_type 96 \
+ -f rtp -acodec pcm_s16le \
  -flags low_delay \
+ -payload_type 10 \
+ -sdp_file /home/kali/Desktop/stream.sdp \
  rtp://${Phone_IP}:5004 </dev/null
  echo "Streaming started. Open audio.sdp in VLC."
 else
